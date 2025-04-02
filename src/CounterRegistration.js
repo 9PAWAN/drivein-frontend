@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import axios from "axios";
 
 function CounterRegistration() {
   const [counterdata, setCounterdata] = useState({
@@ -19,10 +18,12 @@ function CounterRegistration() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    axios
-      .post("http://localhost:9090/addcounters", counterdata)
-      .then((response) => console.log(response.data))
-      .catch((error) => console.error("Error:", error));
+
+    // Simulating form submission
+    const submittedData = { ...counterdata };
+    console.log("Submitted Data:", submittedData);
+
+    // Reset the form after submission
     setCounterdata({
       name: "",
       owner: "",
@@ -31,6 +32,8 @@ function CounterRegistration() {
       image: "",
       status: "Active",
     });
+
+    alert("✅ Counter Registered Successfully!");
   };
 
   return (
@@ -97,7 +100,6 @@ function CounterRegistration() {
                 <input
                   type="file"
                   name="image"
-                  required
                   className="form-control"
                   onChange={change}
                 />
@@ -121,7 +123,7 @@ function CounterRegistration() {
             </tr>
             <tr>
               <td>
-                <label className="form-label">Avaliability :</label>
+                <label className="form-label">Availability :</label>
               </td>
               <td>
                 <input

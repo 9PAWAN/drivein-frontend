@@ -1,17 +1,16 @@
 import React, { useEffect, useState } from "react";
-import axios from "axios";
 
 function CounterActivity() {
-  const [counterdata, setCounterdata] = useState([]);
-  const [counter, setCounter] = useState({});
+  const [counterdata, setCounterdata] = useState([
+    { id: 1, name: "Counter 1", status: "Active" },
+    { id: 2, name: "Counter 2", status: "NotActive" },
+    { id: 3, name: "Counter 3", status: "Active" }
+  ]);
 
-  // Function to fetch data from API
+  // Simulated function to fetch data (instead of Axios)
   const fetchData = () => {
-    axios
-      .get("http://localhost:9090/fetchcounters")
-      .then((response) => {
-        setCounterdata(response.data);
-      });
+    console.log("✅ Fetching counter data...");
+    console.log("Counter Data:", counterdata);
   };
 
   // Fetch data on component mount
@@ -21,24 +20,24 @@ function CounterActivity() {
 
   // Function to change counter status
   const changeCounterStatus = (id) => {
-    axios.get(`http://localhost:9090/fetchcounter?id=${id}`).then((response) => {
-      setCounter(response.data);
+    console.log("🔄 Changing status for Counter ID:", id);
 
-      if (response.data.status === "Active") {
-        response.data.status = "NotActive";
-      } else {
-        response.data.status = "Active";
-      }
+    // Update the counter status locally
+    const updatedData = counterdata.map((counter) =>
+      counter.id === id
+        ? { ...counter, status: counter.status === "Active" ? "NotActive" : "Active" }
+        : counter
+    );
 
-      axios.put(`http://localhost:9090/updatecounters/${id}`, response.data).then((response) => {
-        window.alert(response.data);
-        fetchData();
-      });
-    });
+    setCounterdata(updatedData);
+    console.log("✅ Updated Counter Data:", updatedData);
+
+    window.alert("✅ Counter updated successfully!");
   };
 
   return (
     <div>
+      <h3 className="text-center my-3">Counter Activity</h3>
       <table className="table table-bordered">
         <thead>
           <tr>

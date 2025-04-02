@@ -1,56 +1,61 @@
-import {React,useEffect,useState} from 'react';
-import axios from 'axios';
+import React, { useEffect, useState, useCallback } from "react";
 
-function CounterProfile() {
-   const [counter, setCounter] = useState({
-      name: "",
-      owner: "",
-      contact: "",
-      email: "",
-      image: "",
-      status: "Active",
-    });
-  
-    const [counterdata, setCounterdata] = useState([]);
-    const fetch = () => {
-        axios.get("http://localhost:9090/fetchcounters").then((response) => {
-          setCounterdata(response.data);
-        });
-      };
-      useEffect(() => {
-          fetch();
-        }, []);
-        const editprofile=(id)=>
-          
-        {
-          setCounter({
-            name: "",
-            owner: "",
-            contact: "",
-            email: "",
-            image: "",
-            status: "Active",
-          });
-        }
+function CounterActivity() {
+  const [counterdata, setCounterdata] = useState([]);
+  const [counter, setCounter] = useState({});
+
+  // Function to fetch data from API
+  const fetchData = useCallback(() => {
+    // Simulated API response data
+    const fakeData = [
+      { id: 1, name: "Counter 1", status: "Active", orders: 10 },
+      { id: 2, name: "Counter 2", status: "NotActive", orders: 5 },
+    ];
+    setCounterdata(fakeData);
+  }, []);
+
+  useEffect(() => {
+    fetchData();
+  }, [fetchData]);
+
+  const changeCounterStatus = (id) => {
+    const updatedData = counterdata.map((c) =>
+      c.id === id ? { ...c, status: c.status === "Active" ? "NotActive" : "Active" } : c
+    );
+    setCounterdata(updatedData);
+  };
+
   return (
     <div>
-    <div className="countercard">
-      {counterdata.map((element) => (
-        <div className="counter">
-          <h5>
-            {element.name}<span><button onClick={()=>editprofile(element.id)}>Edit</button> </span>
-            <h4 className='text-light'>{element.status}</h4>
-          </h5>
-          <hr />
-          <img src={element.image} />
-          <hr />
-          <p>{element.contact}</p>
-          
-        </div>
-      ))}
+      <table className="table table-bordered">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          {counterdata.map((element) => (
+            <tr key={element.id}>
+              <td>{element.id}</td>
+              <td>{element.name}</td>
+              <td>
+                <button
+                  className={
+                    element.status === "Active" ? "btn btn-primary px-5 my-2 w-50" : "btn btn-danger px-5 my-2 w-50"
+                  }
+                  onClick={() => changeCounterStatus(element.id)}
+                >
+                  {element.status}
+                </button>
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
     </div>
-  </div>
-  )
+  );
 }
 
-export default CounterProfile
+export default CounterActivity;
